@@ -1,15 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
- */
 package tienda_de_abarrotes;
 
-/**
- *
- * @author Rec17
- */
 import java.io.*;
 import java.util.*;
+import javax.swing.JOptionPane;
 
 // Clase base para artículos
 class Articulo {
@@ -50,6 +43,7 @@ class Tienda {
 
     private ArrayList<Articulo> inventario = new ArrayList<>();
     private String archivoInventario = "inventario.dat";
+    Scanner sc = new Scanner(System.in);
 
     // Constructor de la clase
     public Tienda() {
@@ -79,7 +73,7 @@ class Tienda {
                     comprar();
                     break;
                 case 2:
-                    anadirProducto();
+                    guardarArchivo();
                     break;
                 case 3:
                     eliminarProducto();
@@ -119,7 +113,6 @@ class Tienda {
 
     // Método para añadir un producto al inventario
     public void anadirProducto() {
-        Scanner sc = new Scanner(System.in);
 
         System.out.println("Introduce el codigo del nuevo producto:");
         int codigo = sc.nextInt();
@@ -127,7 +120,7 @@ class Tienda {
         // Comprobar si el artículo ya existe
         if (buscarArticulo(codigo) != null) {
             System.out.println("Ya existe un artículo con ese codigo.");
-            return;
+
         }
 
         System.out.println("Introduce el nombre del nuevo producto:");
@@ -141,6 +134,72 @@ class Tienda {
 
         System.out.println("Se ha añadido el siguiente articulo al inventario:");
         System.out.println(articulo);
+    }
+
+    public int codigo() {
+
+        System.out.println("Introduce el codigo del nuevo producto:");
+        int codigo = sc.nextInt();
+
+        // Comprobar si el artículo ya existe
+        if (buscarArticulo(codigo) != null) {
+            System.out.println("Ya existe un artículo con ese codigo.");
+        }
+        return codigo;
+    }
+
+    public String nombre() {
+        System.out.println("Introduce el nombre del nuevo producto:");
+        String nombre = sc.next();
+        return nombre;
+    }
+
+    public double precio() {
+        System.out.println("Introduce el precio del nuevo producto:");
+        double precio = sc.nextDouble();
+        return precio;
+    }
+
+    //Guardar en un archivo txt
+    public void guardarArchivo() {
+
+        try {
+
+            FileWriter fw = new FileWriter("consulta.txt", true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            PrintWriter pw = new PrintWriter(bw);
+            pw.print(codigo());
+            pw.print("," + nombre());
+            pw.print("," + precio());
+
+            pw.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+        System.out.println("Se ha añadido el siguiente articulo al inventario:");
+        mostarArchivo();
+    }
+
+    public void mostarArchivo() {
+        File archivo = new File("consulta.txt");
+        try {
+
+            FileWriter crear = new FileWriter(archivo, true);
+            BufferedReader brCablon = new BufferedReader(new FileReader(archivo));
+            PrintWriter escribir = new PrintWriter(crear);
+            String st;
+            Vector<String> v = new Vector(40);
+            for (int i = 0; (st = brCablon.readLine()) != null; i++) {
+                v.addElement(st);
+
+            }
+            String[] Arreglo = v.toArray(new String[v.size()]);
+
+            System.out.println(Arreglo[0]);//la x es la posicion vertical del txt
+
+        } catch (IOException e) {
+        }
+
     }
 
 // Método para eliminar un producto del inventario
