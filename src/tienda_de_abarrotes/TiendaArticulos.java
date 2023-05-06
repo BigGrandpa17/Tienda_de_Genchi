@@ -5,13 +5,13 @@ import java.util.*;
 import javax.swing.JOptionPane;
 
 // Clase base para artículos
-class Articulo {
+class Articulo {//Clase Articulo
 
-    private int codigo;
-    private String nombre;
-    private double precio;
+    private int codigo; //Variable de tipo entera Publica llamada "codigo"
+    private String nombre;//Variable de tipo String Publica llamada "nombre"
+    private double precio;//Variable de tipo Dobule Publica llamada "precio"
 
-    public Articulo(int codigo, String nombre, double precio) {
+    public Articulo(int codigo, String nombre, double precio) {//Constructor la clase Articulo que recibe 3 variables,
         this.codigo = codigo;
         this.nombre = nombre;
         this.precio = precio;
@@ -170,7 +170,7 @@ class Tienda {
             PrintWriter pw = new PrintWriter(bw);
             pw.print(codigo());
             pw.print("," + nombre());
-            pw.print("," + precio());
+            pw.print("," + precio()+"\n");
 
             pw.close();
         } catch (Exception e) {
@@ -183,7 +183,6 @@ class Tienda {
     public void mostarArchivo() {
         File archivo = new File("consulta.txt");
         try {
-
             FileWriter crear = new FileWriter(archivo, true);
             BufferedReader brCablon = new BufferedReader(new FileReader(archivo));
             PrintWriter escribir = new PrintWriter(crear);
@@ -194,8 +193,7 @@ class Tienda {
 
             }
             String[] Arreglo = v.toArray(new String[v.size()]);
-
-            System.out.println(Arreglo[0]);//la x es la posicion vertical del txt
+            System.out.println(Arreglo[(Arreglo.length-1)]);
 
         } catch (IOException e) {
         }
@@ -222,8 +220,23 @@ class Tienda {
 // Método para consultar los productos del inventario
     public void consultarProductos() {
         System.out.println("Inventario:");
-        for (Articulo articulo : inventario) {
-            System.out.println(articulo);
+        File archivo = new File("consulta.txt");
+        try {
+
+            FileWriter crear = new FileWriter(archivo, true);
+            BufferedReader brCablon = new BufferedReader(new FileReader(archivo));
+            PrintWriter escribir = new PrintWriter(crear);
+            String st;
+            Vector<String> v = new Vector(40);
+            for (int i = 0; (st = brCablon.readLine()) != null; i++) {
+                v.addElement(st);
+
+            }
+            String[] Arreglo = v.toArray(new String[v.size()]);
+            for(int x=0;Arreglo.length>x;x++){
+                    System.out.println(Arreglo[x]);
+                }
+        } catch (IOException e) {
         }
     }
 

@@ -1,1 +1,4 @@
-9414,cafe,80.0
+13,paletas,2.0
+465,Cheetos,13.0
+789,papel,50.0
+753,Cafe,15.0
