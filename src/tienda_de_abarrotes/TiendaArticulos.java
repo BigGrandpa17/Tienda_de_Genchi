@@ -5,13 +5,13 @@ import java.util.*;
 import javax.swing.JOptionPane;
 
 // Clase base para artículos
-class Articulo {
+class Articulo {//Clase Articulo
 
-    private int codigo;
-    private String nombre;
-    private double precio;
+    private int codigo; //Variable de tipo entera Publica llamada "codigo"
+    private String nombre;//Variable de tipo String Publica llamada "nombre"
+    private double precio;//Variable de tipo Dobule Publica llamada "precio"
 
-    public Articulo(int codigo, String nombre, double precio) {
+    public Articulo(int codigo, String nombre, double precio) {//Constructor la clase Articulo que recibe 3 variables,
         this.codigo = codigo;
         this.nombre = nombre;
         this.precio = precio;
@@ -34,7 +34,7 @@ class Articulo {
     }
 
     public String toString() {
-        return "Código: " + codigo + "\nNombre: " + nombre + "\nPrecio: " + precio;
+        return "Codigo: " + codigo + "\nNombre: " + nombre + "\nPrecio: " + precio;
     }
 }
 
@@ -42,6 +42,7 @@ class Articulo {
 class Tienda {
 
     private ArrayList<Articulo> inventario = new ArrayList<>();
+    private ArrayList<Articulo> carrito = new ArrayList<>();
     private String archivoInventario = "inventario.dat";
     Scanner sc = new Scanner(System.in);
 
@@ -62,7 +63,8 @@ class Tienda {
             System.out.println("3. Eliminar productos");
             System.out.println("4. Consultar productos");
             System.out.println("5. Modificar productos");
-            System.out.println("6. Salir");
+            System.out.println("6. Mostrar Carrito");
+            System.out.println("7. Salir");
             System.out.print("Selecciona una opcion: ");
 
             Scanner sc = new Scanner(System.in);
@@ -85,32 +87,50 @@ class Tienda {
                     modificarProducto();
                     break;
                 case 6:
+                    System.out.println("Productos en el carrito:");
+                    mostrarcarrito();
+                    break;
+                case 7:
                     guardarInventario();
-                    System.out.println("¡Gracias por usar la tienda! Hasta pronto.");
+                    System.out.println("Gracias por usar la tienda! Hasta pronto.");
                     break;
                 default:
-                    System.out.println("Opción inválida. Inténtalo de nuevo.");
+                    System.out.println("Opcion invalida, Inténtalo de nuevo.");
             }
-        } while (opcion != 6);
+        } while (opcion != 7);
     }
 
     // Método para comprar un producto
     public void comprar() {
         Scanner sc = new Scanner(System.in);
-
-        System.out.println("Introduce el código del producto que deseas comprar:");
-        int codigo = sc.nextInt();
-
-        Articulo articulo = buscarArticulo(codigo);
+boolean x=false;
+        while(x==false){
+        System.out.println("Para dejar de comprar, Ingrese 'X'");
+        System.out.println("Introduce el codigo del producto que deseas comprar:");
+        String codigo = sc.nextLine();
+        if(codigo.equalsIgnoreCase("X")){
+         x=true;  
+        }
+        else{
+        Articulo articulo = buscarArticulo(Integer.parseInt(codigo));
 
         if (articulo != null) {
             System.out.println("Has comprado el siguiente articulo:");
             System.out.println(articulo);
+            carrito.add(articulo);
         } else {
-            System.out.println("No se ha encontrado ningún articulo con ese codigo.");
+            System.out.println("No se ha encontrado ningun articulo con ese codigo.");
         }
+        
+        }
+        
+        }//Fin del While
+        System.out.println("Ha dejado de comprar...");
     }
 
+    public void mostrarcarrito(){
+        System.out.println(carrito);
+    }
     // Método para añadir un producto al inventario
     public void anadirProducto() {
 
@@ -119,7 +139,7 @@ class Tienda {
 
         // Comprobar si el artículo ya existe
         if (buscarArticulo(codigo) != null) {
-            System.out.println("Ya existe un artículo con ese codigo.");
+            System.out.println("Ya existe un articulo con ese codigo.");
 
         }
 
@@ -132,7 +152,7 @@ class Tienda {
         Articulo articulo = new Articulo(codigo, nombre, precio);
         inventario.add(articulo);
 
-        System.out.println("Se ha añadido el siguiente articulo al inventario:");
+        System.out.println("Se ha anadido el siguiente articulo al inventario:");
         System.out.println(articulo);
     }
 
@@ -170,20 +190,19 @@ class Tienda {
             PrintWriter pw = new PrintWriter(bw);
             pw.print(codigo());
             pw.print("," + nombre());
-            pw.print("," + precio());
+            pw.print("," + precio()+"\n");
 
             pw.close();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
-        System.out.println("Se ha añadido el siguiente articulo al inventario:");
+        System.out.println("Se ha anadido el siguiente articulo al inventario:");
         mostarArchivo();
     }
 
     public void mostarArchivo() {
         File archivo = new File("consulta.txt");
         try {
-
             FileWriter crear = new FileWriter(archivo, true);
             BufferedReader brCablon = new BufferedReader(new FileReader(archivo));
             PrintWriter escribir = new PrintWriter(crear);
@@ -194,8 +213,7 @@ class Tienda {
 
             }
             String[] Arreglo = v.toArray(new String[v.size()]);
-
-            System.out.println(Arreglo[0]);//la x es la posicion vertical del txt
+            System.out.println(Arreglo[(Arreglo.length-1)]);
 
         } catch (IOException e) {
         }
@@ -215,15 +233,30 @@ class Tienda {
             System.out.println("Se ha eliminado el siguiente articulo del inventario:");
             System.out.println(articulo);
         } else {
-            System.out.println("No se ha encontrado ningún articulo con ese codigo.");
+            System.out.println("No se ha encontrado ningun articulo con ese codigo.");
         }
     }
 
 // Método para consultar los productos del inventario
     public void consultarProductos() {
         System.out.println("Inventario:");
-        for (Articulo articulo : inventario) {
-            System.out.println(articulo);
+        File archivo = new File("consulta.txt");
+        try {
+
+            FileWriter crear = new FileWriter(archivo, true);
+            BufferedReader brCablon = new BufferedReader(new FileReader(archivo));
+            PrintWriter escribir = new PrintWriter(crear);
+            String st;
+            Vector<String> v = new Vector(40);
+            for (int i = 0; (st = brCablon.readLine()) != null; i++) {
+                v.addElement(st);
+
+            }
+            String[] Arreglo = v.toArray(new String[v.size()]);
+            for(int x=0;Arreglo.length>x;x++){
+                    System.out.println(Arreglo[x]);
+                }
+        } catch (IOException e) {
         }
     }
 
@@ -260,15 +293,23 @@ class Tienda {
 
 // Método para cargar el inventario desde el archivo
     public void cargarInventario() {
-        try {
-            FileInputStream fileIn = new FileInputStream(archivoInventario);
-            ObjectInputStream in = new ObjectInputStream(fileIn);
-            inventario = (ArrayList<Articulo>) in.readObject();
-            in.close();
-            fileIn.close();
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println("No se ha podido cargar el inventario.");
-        }
+                try {
+      FileReader fr = new FileReader("consulta.txt");
+      BufferedReader br = new BufferedReader(fr);
+      String linea;
+      while ((linea = br.readLine()) != null) {
+         String[] lineaseparada=linea.split(",");
+         int code=Integer.parseInt(lineaseparada[0]);
+         String name=lineaseparada[1];
+         double price=Double.parseDouble(lineaseparada[2]);
+         Articulo articulo = new Articulo(code, name, price);
+        inventario.add(articulo);
+      }
+      br.close();
+      fr.close();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
     }
 
 // Método para guardar el inventario en el archivo
