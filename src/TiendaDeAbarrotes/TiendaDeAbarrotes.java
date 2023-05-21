@@ -17,7 +17,7 @@ public class TiendaDeAbarrotes {//Daddy
     int codigo; //Variable de tipo entera Publica llamada "codigo"
     String nombre;//Variable de tipo String Publica llamada "nombre"
 
-    public TiendaDeAbarrotes(int Codigo, String Nombre, double Precio) {//Constructor la clase papá
+    public TiendaDeAbarrotes(int Codigo, String Nombre) {//Constructor la clase papá
         this.codigo = Codigo;
         this.nombre = Nombre;
     }
@@ -29,8 +29,8 @@ class Articulo extends TiendaDeAbarrotes {
     double precio;//Variable de tipo Dobule Publica llamada "precio"
     int stock;
 
-    Articulo(int codigo, String nombre, double precio) {
-        super(codigo, nombre, precio);
+    Articulo(int codigo, String nombre) {
+        super(codigo, nombre);
     }
 
     public int get(int Codigo) {
@@ -231,6 +231,7 @@ class Articulo extends TiendaDeAbarrotes {
     public void eliminarProveedores() {
 
     }
+<<<<<<< HEAD
 
 }
 
@@ -241,4 +242,7 @@ class Minero {
         articulo.menuRoles();
     }
 
+=======
+    
+>>>>>>> cab795b077c0487a11efa4152426b1a8f31542ae
 }
