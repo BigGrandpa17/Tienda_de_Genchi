@@ -62,7 +62,7 @@ public class PruebaObj {
         for (int i = 0; i < arregloLibros.length; i++) {
             int sum = i + 1;
             System.out.println("---------------" + "Libro" + sum + "-----------------------");
-            System.out.println("Titulo: " + arregloLibros[i].);
+            System.out.println("Titulo: " + arregloLibros[i]);
             System.out.println("Año: " + arregloLibros[i].año);
             System.out.println("Codigo: " + arregloLibros[i].code);
             System.out.println("-----------------------------------------");
