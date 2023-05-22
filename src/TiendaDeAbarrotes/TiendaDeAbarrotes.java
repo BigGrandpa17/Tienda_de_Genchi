@@ -21,9 +21,13 @@ public class TiendaDeAbarrotes {//Daddy
         this.codigo = Codigo;
         this.nombre = Nombre;
     }
+    
+    public static void main(String[] args) {
+        Articulo llamador = new Articulo(1, "");
+        llamador.menuRoles();
+    }
 
 }
-
 class Articulo extends TiendaDeAbarrotes {
 
     double precio;//Variable de tipo Dobule Publica llamada "precio"
@@ -56,7 +60,7 @@ class Articulo extends TiendaDeAbarrotes {
         do {
             System.out.println("Bienvenido a la tienda de abarrotes");
             System.out.println("1.- Soy un cliente    2.-Soy el dueno   3.-Salir del sistema");
-            respuestaUser=leer.nextInt();
+            respuestaUser = leer.nextInt();
             switch (respuestaUser) {
                 case 1:
                     menuCliente();
@@ -125,7 +129,7 @@ class Articulo extends TiendaDeAbarrotes {
             System.out.println("2. Anadir productos");
             System.out.println("3. Mostrar Proveedores");
             System.out.println("4. Mostrar productos");
-            System.out.println("5. Consultar productos");
+            System.out.println("5. Modificar productos");
             System.out.println("6. Consultar proveedores");
             System.out.println("7. Eliminar productos");
             System.out.println("8. Eliminar Proveedores");
@@ -148,7 +152,7 @@ class Articulo extends TiendaDeAbarrotes {
                     mostarArticulo();
                     break;
                 case 5:
-                    consultarProductos();
+                    modificarArticulos();
                     break;
                 case 6:
                     consultarProveedores();
@@ -170,7 +174,7 @@ class Articulo extends TiendaDeAbarrotes {
     }
 
     public void anadirProveedores() {
-
+    
     }
 
     public void anadirArticulo() {
@@ -204,6 +208,7 @@ class Articulo extends TiendaDeAbarrotes {
             PrintWriter escribir = new PrintWriter(crear);
             String st;
             Vector<String> v = new Vector(40);
+            
             for (int i = 0; (st = brCablon.readLine()) != null; i++) {
                 v.addElement(st);
 
@@ -215,6 +220,11 @@ class Articulo extends TiendaDeAbarrotes {
         }
 
     }
+
+    public void modificarArticulos() {
+            
+        }
+    
 
     public void consultarProductos() {
 
@@ -231,18 +241,5 @@ class Articulo extends TiendaDeAbarrotes {
     public void eliminarProveedores() {
 
     }
-<<<<<<< HEAD
 
-}
-
-class Minero {
-
-    public static void main(String[] args) {
-        Articulo articulo = new Articulo(1, "", 1);
-        articulo.menuRoles();
-    }
-
-=======
-    
->>>>>>> cab795b077c0487a11efa4152426b1a8f31542ae
 }

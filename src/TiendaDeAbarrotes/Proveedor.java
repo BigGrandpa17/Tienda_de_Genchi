@@ -16,6 +16,7 @@ public class Proveedor extends TiendaDeAbarrotes {
 
     public Proveedor(int Codigo, String Nombre, String Empresa) {
         super(Codigo, Nombre);
+        empresaProveedor = Empresa;
     }
 
     void agregarProveedores() {
@@ -85,6 +86,46 @@ public class Proveedor extends TiendaDeAbarrotes {
         }
     }
 
+    void modificarProveedor() {
+        String nombreProveedorVolatil;
+        String empresaProveedorVolatil;
+        if (numProveedores > 0) {
+
+            System.out.println("\n=== Proveedores registrados ===");
+            for (int i = 0; i < numProveedores; i++) {//se repite el numero de proveedores que haya
+                System.out.println("ID: " + arregloProveedores[i].codigo + "\tNombre: " + arregloProveedores[i].nombre + "\tEmpresa: " + arregloProveedores[i].empresaProveedor);
+            }
+
+            System.out.print("Ingrese el ID del proveedor a modificar: ");
+            int idProveedorModificar = leerint.nextInt();
+
+            int posicionProveedorModificar = -1;
+            for (int i = 0; i < numProveedores; i++) {
+                if (arregloProveedores[i].codigo == idProveedorModificar) {
+                    posicionProveedorModificar = i;
+                    break;
+                }
+            }
+
+            if (posicionProveedorModificar != -1) {
+                System.out.print("Ingrese el nombre del proveedor: ");
+                nombreProveedorVolatil = leer.nextLine();
+
+                System.out.print("Ingrese la empresa del proveedor: ");
+                empresaProveedorVolatil = leer.nextLine();
+
+                arregloProveedores[posicionProveedorModificar].nombre = nombreProveedorVolatil;
+                arregloProveedores[posicionProveedorModificar].empresaProveedor = empresaProveedorVolatil;
+
+                System.out.println("Proveedor modificado con éxito");
+            } else {
+                System.out.println("No se encontró un proveedor con el ID proporcionado");
+            }
+        } else {
+            System.out.println("No hay proveedores registrados");
+        }
+    }
+
     void menuProveedores() {
         int respuestaProveedores = 0;
         int contadorMenuProveedores = 0;
@@ -94,7 +135,7 @@ public class Proveedor extends TiendaDeAbarrotes {
             System.out.println("1. Agregar proveedor");
             System.out.println("2. Mostrar proveedores");
             System.out.println("3. Eliminar proveedor");
-            System.out.println("4. Salir");
+            System.out.println("4. Modificar proveedores");
             System.out.print("Ingrese la opción deseada: ");
 
             respuestaProveedores = leerint.nextInt();
@@ -105,9 +146,17 @@ public class Proveedor extends TiendaDeAbarrotes {
                 mostrarProveedores();
             } else if (respuestaProveedores == 3) {
                 eliminarProveedores();
+            } else if (respuestaProveedores == 4) {
+                modificarProveedor();
+            } else if (respuestaProveedores == 5) {
                 contadorMenuProveedores++;
             }
         }
 
+    }
+
+    public static void main(String[] args) {
+        Proveedor llamas = new Proveedor(1, "", "");
+        llamas.menuProveedores();
     }
 }

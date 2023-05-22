@@ -1,1 +1,2 @@
-1,Chetos,15.0
+1,Koalas,9000.0
+2,Donas,16.0
