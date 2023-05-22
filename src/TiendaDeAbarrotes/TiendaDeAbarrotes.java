@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 public class TiendaDeAbarrotes {//Daddy
@@ -25,7 +27,8 @@ public class TiendaDeAbarrotes {//Daddy
 }
 
 class Articulo extends TiendaDeAbarrotes {
-
+        File archivocarrito = new File("Carrito.txt");
+        File archivoarticulos = new File("Articulos.txt");
     double precio;//Variable de tipo Dobule Publica llamada "precio"
     int stock;
 
@@ -51,12 +54,18 @@ class Articulo extends TiendaDeAbarrotes {
         return precio;
     }
 
-    public void menuRoles() {
+    public int get(int Cantidad, String Ola) {
+        System.out.println("Introduce la cantidad de nuevo producto:");
+        stock = leer.nextInt();
+        return stock;
+    }
+
+    public void menuRoles() throws IOException {
         int respuestaUser = 0;
         do {
             System.out.println("Bienvenido a la tienda de abarrotes");
             System.out.println("1.- Soy un cliente    2.-Soy el dueno   3.-Salir del sistema");
-            respuestaUser=leer.nextInt();
+            respuestaUser = leer.nextInt();
             switch (respuestaUser) {
                 case 1:
                     menuCliente();
@@ -74,10 +83,10 @@ class Articulo extends TiendaDeAbarrotes {
         } while (respuestaUser != 3);
     }
 
-    public void menuCliente() {
+    public void menuCliente() throws IOException {
         int respuestaCliente = 0;
+        leer.nextLine(); //Limpieza del buffer del scanner
         do {
-            leer.nextLine(); //Limpieza del buffer del scanner
             System.out.println("Que deseas hacer?");
             System.out.println("1.-Adquirir articulos     2.-Ver carrito     3.-Pagar carrito       4.- Regresar al menu anterior   5.-Salir del sistema");
             respuestaCliente = leer.nextInt();
@@ -104,69 +113,163 @@ class Articulo extends TiendaDeAbarrotes {
         } while (respuestaCliente != 5);
     }
 
-    public void adquirirArticulos() {
+    public void adquirirArticulos() throws IOException {
+        String productoelegido = "";
+        try {
+            FileWriter crear = new FileWriter(archivoarticulos, true);
+            BufferedReader brCablon = new BufferedReader(new FileReader(archivoarticulos));
+            FileWriter creaarchivocarrito = new FileWriter(archivocarrito, false);//Para eliminar el archivo y crearlo en blanco, dejar en false
+            PrintWriter escrituraarchivocarrito = new PrintWriter(creaarchivocarrito);
+            PrintWriter escribir = new PrintWriter(crear);
+            String st;
+            Vector<String> v = new Vector(40);
+            for (int i = 0; (st = brCablon.readLine()) != null; i++) {
+                v.addElement(st);
+            }
+            String[] Arreglo = v.toArray(new String[v.size()]);
+            System.out.println("Articulos en venta:" + "\n");
+            for (int x = 0; Arreglo.length > x; x++) {
+                System.out.println(Arreglo[x]);
+            }
+            leer.nextLine();
+            do {
+                System.out.println("\n" + "Elige tus productos escribiendo el nombre (Para dejar de comprar ingrese 'X'):" + "\n");
+                productoelegido = leer.nextLine();
+                for (int renglon = 0; Arreglo.length > renglon; renglon++) {
+                    String[] partes = Arreglo[renglon].split(",");
+                    if (partes[1].equalsIgnoreCase(productoelegido)) {
+                        escrituraarchivocarrito.print(Arreglo[renglon] + "\n");
+                        System.out.println("Producto " + partes[1] + " agregado al carrito" + "\n");
+                    }
+                }
+            } while (!(productoelegido.equalsIgnoreCase("x")));
+            System.out.println("Has dejado de comprar");
+            escrituraarchivocarrito.close();
+            creaarchivocarrito.close();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
 
     }
 
     public void verCarrito() {
-
+        try {
+            FileWriter crear = new FileWriter(archivocarrito, true);
+            BufferedReader brCablon = new BufferedReader(new FileReader(archivocarrito));
+            PrintWriter escribir = new PrintWriter(crear);
+            String st;
+            Vector<String> v = new Vector(40);
+            for (int i = 0; (st = brCablon.readLine()) != null; i++) {
+                v.addElement(st);
+            }
+            String[] Arreglo = v.toArray(new String[v.size()]);
+            if (archivocarrito.length() == 0) {
+                System.out.println("No has comprado aun" + "\n");
+            } else {
+                for (int renglon = 0; Arreglo.length > renglon; renglon++) {
+                    String[] partes = Arreglo[renglon].split(",");
+                    System.out.println("Codigo: " + partes[0] + " Producto: " + partes[1] + " precio: " + partes[2] + " Cantidad: ");
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Articulo.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void pagarCarrito() {
 
     }
 
-    public void menuDueno() {
-        int respuestaMenu = 0;
+    public void menuDueno() throws IOException {
+        int respuestaDueno = 0;
         do {
-            leer.nextLine(); //Limpieza del buffer del scanner
-            System.out.println("\nMenu:");
+            System.out.println("Con que quieres trabajar?");
+            System.out.println("1. Articulos");
+            System.out.println("2. Proveedor");
+            System.out.println("3.-Regresar al menu Anterior");
+            respuestaDueno = leer.nextInt();
+            switch (respuestaDueno) {
+                case 1:
+                    menuArticulosDueno();
+                    break;
+                case 2:
+                    menuProveedoresDueno();
+                    break;
+                case 3:
+                    menuRoles();
+                    break;
+                default:
+                    System.out.println("Opcion Invalida, ingresa una opcion valida");
+            }
+        } while (respuestaDueno != 3);
+    }
+
+    public void menuArticulosDueno() throws IOException {
+        int respuestaduenoArticulos = 0;
+        do {
+            System.out.println("Que desea hacer con Articulos?");
+            System.out.println("1. Anadir articulos");
+            System.out.println("2. Eliminar articulos");
+            System.out.println("3. Modificar articulos");
+            System.out.println("4. Ver articulos");
+            System.out.println("5.-Regresar al menu anterior");
+            respuestaduenoArticulos = leer.nextInt();
+            switch (respuestaduenoArticulos) {
+                case 1:
+                    anadirArticulo();
+                    break;
+                case 2:
+                    eliminarArticulos();
+                    break;
+                case 3:
+                    modificarArticulos();
+                    break;
+                case 4:
+                    consultarArticulos();
+                    break;
+                case 5:
+                    menuDueno();
+                    break;
+                default:
+                    System.out.println("Opcion Invalida, ingresa una opcion valida");
+            }
+
+        } while (respuestaduenoArticulos != 5);
+
+    }
+
+    public void menuProveedoresDueno() throws IOException {
+        int respuestaduenoProveedores = 0;
+        do {
+            System.out.println("Que desea hacer con Proveedores?");
             System.out.println("1. Anadir proveedores");
-            System.out.println("2. Anadir productos");
-            System.out.println("3. Mostrar Proveedores");
-            System.out.println("4. Mostrar productos");
-            System.out.println("5. Consultar productos");
-            System.out.println("6. Consultar proveedores");
-            System.out.println("7. Eliminar productos");
-            System.out.println("8. Eliminar Proveedores");
-            System.out.println("9. Regresar al menu anterior");
-            System.out.print("Selecciona una opcion: ");
-
-            respuestaMenu = leer.nextInt();
-
-            switch (respuestaMenu) {
+            System.out.println("2. Eliminar proveedores");
+            System.out.println("3. Modificar proveedores");
+            System.out.println("4. Ver proveedores");
+            System.out.println("5.-Regresar al menu anterior");
+            respuestaduenoProveedores = leer.nextInt();
+            switch (respuestaduenoProveedores) {
                 case 1:
                     anadirProveedores();
                     break;
                 case 2:
-                    anadirArticulo();
-                    break;
-                case 3:
-                    mostrarProveedores();
-                    break;
-                case 4:
-                    mostarArticulo();
-                    break;
-                case 5:
-                    consultarProductos();
-                    break;
-                case 6:
-                    consultarProveedores();
-                    break;
-                case 7:
-                    eliminarProductos();
-                    break;
-                case 8:
                     eliminarProveedores();
                     break;
-                case 9:
-                    menuRoles();
+                case 3:
+                    modificarProveedores();
+                    break;
+                case 4:
+                    mostrarProveedores();
+                    break;
+                case 5:
+                    menuDueno();
                     break;
                 default:
-                    System.out.println("Opcion invalida, Inténtalo de nuevo.");
-                    break;
+                    System.out.println("Opcion Invalida, ingresa una opcion valida");
             }
-        } while (respuestaMenu != 9);
+        } while (respuestaduenoProveedores != 5);
+
     }
 
     public void anadirProveedores() {
@@ -177,30 +280,38 @@ class Articulo extends TiendaDeAbarrotes {
 
         try {
 
-            FileWriter fw = new FileWriter("consulta.txt", true);
+            FileWriter fw = new FileWriter("Articulos.txt", true);
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter pw = new PrintWriter(bw);
             pw.print(get(1));
             pw.print("," + get(""));
-            pw.print("," + get(1.1) + "\n");
+            pw.print("," + get(1.0));
+            pw.print("," + get(1, "") + "\n");
 
             pw.close();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
         System.out.println("Se ha anadido el siguiente articulo al inventario:");
-        mostarArticulo();
+        mostrarArticulos();
+    }
+
+    public void modificarProveedores() {
+
+    }
+
+    public void modificarArticulos() {
+
     }
 
     public void mostrarProveedores() {
 
     }
 
-    public void mostarArticulo() {
-        File archivo = new File("consulta.txt");
+    public void mostrarArticulos() {
         try {
-            FileWriter crear = new FileWriter(archivo, true);
-            BufferedReader brCablon = new BufferedReader(new FileReader(archivo));
+            FileWriter crear = new FileWriter(archivoarticulos, true);
+            BufferedReader brCablon = new BufferedReader(new FileReader(archivoarticulos));
             PrintWriter escribir = new PrintWriter(crear);
             String st;
             Vector<String> v = new Vector(40);
@@ -209,14 +320,34 @@ class Articulo extends TiendaDeAbarrotes {
 
             }
             String[] Arreglo = v.toArray(new String[v.size()]);
-            System.out.println(Arreglo[(Arreglo.length - 1)]);
+            System.out.println(Arreglo[(Arreglo.length - 1)] + "\n");
 
         } catch (IOException e) {
         }
 
     }
 
-    public void consultarProductos() {
+    public void consultarArticulos() {
+        try {
+            FileWriter crear = new FileWriter(archivoarticulos, true);
+            BufferedReader brCablon = new BufferedReader(new FileReader(archivoarticulos));
+            PrintWriter escribir = new PrintWriter(crear);
+            String st;
+            Vector<String> v = new Vector(40);
+            for (int i = 0; (st = brCablon.readLine()) != null; i++) {
+                v.addElement(st);
+
+            }
+            String[] Arreglo = v.toArray(new String[v.size()]);
+            for (int x = 0; Arreglo.length > x; x++) {
+                System.out.println(Arreglo[x]);
+                if (x == Arreglo.length) {
+                    System.out.println("\n");
+                }
+            }
+
+        } catch (IOException e) {
+        }
 
     }
 
@@ -224,25 +355,20 @@ class Articulo extends TiendaDeAbarrotes {
 
     }
 
-    public void eliminarProductos() {
+    public void eliminarArticulos() {
 
     }
 
     public void eliminarProveedores() {
 
     }
-<<<<<<< HEAD
 
 }
 
 class Minero {
 
-    public static void main(String[] args) {
-        Articulo articulo = new Articulo(1, "", 1);
+    public static void main(String[] args) throws IOException {
+        Articulo articulo = new Articulo(1, "");
         articulo.menuRoles();
     }
-
-=======
-    
->>>>>>> cab795b077c0487a11efa4152426b1a8f31542ae
 }

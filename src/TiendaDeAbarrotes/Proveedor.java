@@ -110,4 +110,8 @@ public class Proveedor extends TiendaDeAbarrotes {
         }
 
     }
+    public static void main(String[] args) {
+        Proveedor prov=new Proveedor(0, "", "");
+        prov.menuProveedores();
+    }
 }
