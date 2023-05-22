@@ -154,9 +154,15 @@ public class Proveedor extends TiendaDeAbarrotes {
         }
 
     }
+<<<<<<< HEAD
 
     public static void main(String[] args) {
         Proveedor llamas = new Proveedor(1, "", "");
         llamas.menuProveedores();
+=======
+    public static void main(String[] args) {
+        Proveedor prov=new Proveedor(0, "", "");
+        prov.menuProveedores();
+>>>>>>> 101082ae285e19a5447d8d00c15da7386ca8e8fc
     }
 }
